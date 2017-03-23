@@ -1,0 +1,15 @@
+{
+  "name": "vault",
+  "version": "1.0.0",
+  "description": "A simple media service you can use within your ecosystem",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "author": "Guilherme Reginaldo Ruella <potentii@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^4.9.1",
+    "w-srvr": "^2.1.0"
+  }
+}
