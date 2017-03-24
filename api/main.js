@@ -42,13 +42,15 @@ function start(){
       const router = require('./router/router.js');
 
       // *Starting the database:
-      return db.connectAndSync({
+      return db.start({
             host: process.env.DB_HOST || '127.0.0.1',
             port: process.env.DB_PORT,
             user: process.env.DB_USER,
             pass: process.env.DB_PASS,
-            database: process.env.DB_SCHEMA
+            database: process.env.DB_SCHEMA,
+            db_path: process.env.DB_PATH
          })
+         // TODO setup the disk folders
          // *Setting up the routes:
          .then(mongoose => router(mongoose))
          // *Setting up the server:
@@ -96,7 +98,7 @@ function start(){
 
 
 /**
- * Finishes all the services, and then end the process
+ * Finishes all the services, and then ends the process
  */
 function finish(){
    // *Checking if the finish signal has been set already, returning if it has:
@@ -106,7 +108,7 @@ function finish(){
    finish_signaled = true;
 
    // *Stopping the database:
-   db.disconnect()
+   db.stop()
       // *Stopping the server:
       .then(() => server.stop())
       // *Stopping the process:
