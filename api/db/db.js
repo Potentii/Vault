@@ -130,7 +130,8 @@ function connect({ host, database, port, user, pass }){
    return mongoose.connect(host, database, port, {
          user,
          pass,
-         server: {poolSize: 4}
+         server: {poolSize: 4},
+         promiseLibrary: Promise
       })
       // *Appending the mongoose in the chain:
       .then(() => mongoose);
@@ -147,10 +148,35 @@ function sync(){
    return new Promise((resolve, reject) => {
       // *Trying to setup the model:
       try{
-         // *Getting the schema definition:
+         // *Getting the Schema class:
          const Schema = mongoose.Schema;
 
-         // TODO implement the model
+         // *Defining the App schema:
+         const Apps = new Schema({
+            name: {
+               type: String,
+               required: true,
+               unique: true,
+               match: [/^[a-z0-9\_\-]+$/, 'Invalid app name']
+            }
+         });
+
+         // *Defining the Access schema:
+         const Accesses = new Schema({
+            key: {
+               type: String,
+               required: true,
+            },
+            _app: {
+               type: Schema.Types.ObjectId,
+               ref: 'App',
+               required: false
+            }
+         });
+
+         // *Applying the model:
+         mongoose.model('App', Apps);
+         mongoose.model('Access', Accesses);
 
          // Resolving the promise with mongoose:
          resolve(mongoose);

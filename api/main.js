@@ -44,7 +44,7 @@ function start(){
       // *Starting the database:
       return db.start({
             host: process.env.DB_HOST || '127.0.0.1',
-            port: process.env.DB_PORT,
+            port: process.env.DB_PORT || '27017',
             user: process.env.DB_USER,
             pass: process.env.DB_PASS,
             database: process.env.DB_SCHEMA,
