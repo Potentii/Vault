@@ -9,7 +9,8 @@
   "author": "Guilherme Reginaldo Ruella <potentii@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "mongoose": "^4.9.1",
-    "w-srvr": "^2.1.0"
+    "mongod": "2.0.0",
+    "mongoose": "4.9.1",
+    "w-srvr": "2.1.0"
   }
 }
