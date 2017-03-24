@@ -4,6 +4,6 @@ module.exports = mongoose => {
    return {
       images: {},
       apps: {},
-      api: require('./routes/api.js')(mongoose)
+      credentials: require('./routes/credentials.js')(mongoose)
    }
 };

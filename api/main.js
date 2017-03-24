@@ -10,32 +10,9 @@ let finish_signaled = false;
 
 
 
-// *When process is interrupted, finishing the program:
-process.on('SIGINT', finish);
-
-// *When the process doesn't have any other task left:
-process.on('exit', code => {
-   // *Logging it out:
-   console.log('finished');
-});
-
-
-
-// *Starting the server:
-start()
-   .then(info => {
-      console.log('Server started @ ' + info.address.href);
-   })
-   .catch(err => {
-      console.error(err);
-      finish();
-   });
-
-
-
 /**
  * Starts the server
- * @return Promise A promise that resolves into a { server, address } object, or rejects if something went wrong
+ * @return {Promise} A promise that resolves into a { server, address } object, or rejects if something went wrong
  */
 function start(){
    try{
@@ -73,7 +50,20 @@ function start(){
 
 
                   // *Defining routes for remote service configuration:
-                  .post('/api/v1/setup', routes.api.setup).advanced.parseJSON().done()
+                  // *Sets the credentials:
+                  .post('/api/v1/credentials', routes.credentials.set)
+                     .advanced.parseJSON().done()
+
+                  // *Updates the credentials:
+                  .put('/api/v1/credentials', routes.credentials.check)
+                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
+                  .put('/api/v1/credentials', routes.credentials.update)
+                     .advanced.parseJSON().done()
+
+                  // *Erases the credentials:
+                  .delete('/api/v1/credentials', routes.credentials.check)
+                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
+                  .delete('/api/v1/credentials', routes.credentials.erase)
 
 
                   // *Defining routes for remote user management:
@@ -121,3 +111,8 @@ function finish(){
          process.exit(1);
       });
 }
+
+
+
+// *Exporting this module:
+module.exports = { start, finish };

@@ -4,7 +4,7 @@
   "description": "A simple media service you can use within your ecosystem",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "standalone": "node standalone.js"
   },
   "author": "Guilherme Reginaldo Ruella <potentii@gmail.com>",
   "license": "MIT",

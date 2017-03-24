@@ -1,6 +1,7 @@
 // *Initializing the credentials:
 let user = undefined;
 let pass = undefined;
+let last_credentials = undefined;
 
 
 
@@ -15,9 +16,39 @@ function set(new_user, new_pass){
    if(typeof new_user !== 'string' || typeof new_pass !== 'string')
       throw new TypeError('The new credentials must be strings');
 
+   // *Saving the last credentials:
+   last_credentials = { user, pass };
+
    // *Setting the credentials:
    pass = new_pass;
    user = new_user;
+}
+
+
+
+/**
+ * Restores the credentials to their last value:
+ */
+function restore(){
+   // *Checking if the credentials have a previous value:
+   if(last_credentials)
+      // *If they have:
+      // *Restoring the last credentials:
+      set(last_credentials.user, last_credentials.pass);
+}
+
+
+
+/**
+ * Resets the credentials to their initial value
+ */
+function reset(){
+   // *Saving the last credentials:
+   last_credentials = { user, pass };
+
+   // *Resetting the credentials:
+   pass = undefined;
+   user = undefined;
 }
 
 
@@ -45,4 +76,4 @@ function testAgainst(test_user, test_pass){
 
 
 // *Exporting this module:
-module.exports = { set, isSet, testAgainst };
+module.exports = { set, reset, isSet, testAgainst };
