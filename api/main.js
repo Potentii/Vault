@@ -88,28 +88,20 @@ function start(){
 
 
 /**
- * Finishes all the services, and then ends the process
+ * Finishes all the services
+ * @return {Promise} A promise that resolves when the services have been finished, or rejects if something went wrong
  */
 function finish(){
    // *Checking if the finish signal has been set already, returning if it has:
-   if(finish_signaled) return;
+   if(finish_signaled) return Promise.resolve();
 
    // *Setting the finish signal:
    finish_signaled = true;
 
    // *Stopping the database:
-   db.stop()
+   return db.stop()
       // *Stopping the server:
-      .then(() => server.stop())
-      // *Stopping the process:
-      .then(() => process.exit(0))
-      .catch(err => {
-         // *If something bad happens:
-         // *Logging the error:
-         console.error(err);
-         // *Stopping the process:
-         process.exit(1);
-      });
+      .then(() => server.stop());
 }
 
 

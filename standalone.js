@@ -10,7 +10,7 @@ const service = require('./api/main.js');
 
 
 // *When process is interrupted, finishing the program:
-process.on('SIGINT', service.finish);
+process.on('SIGINT', kill);
 
 // *When the process doesn't have any other task left:
 process.on('exit', code => {
@@ -31,5 +31,23 @@ service.start()
       // *Logging the error:
       console.error(err);
       // *Finishing the service:
-      service.finish();
+      kill();
    });
+
+
+
+/**
+ * Finishes all the services, and then kills the process
+ */
+function kill(){
+   service.finish()
+      // *Stopping the process:
+      .then(() => process.exit(0))
+      .catch(err => {
+         // *If some error happens:
+         // *Logging the error:
+         console.error(err);
+         // *Stopping the process:
+         process.exit(1);
+      });
+}

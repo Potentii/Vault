@@ -51,32 +51,8 @@ module.exports = mongoose => {
          res.status(405).end();
       } else{
          // *If they haven't been:
-         // *Trying to set the credentials:
-         try{
-            // *Getting the credentials on the request body:
-            const user = req.body.user;
-            const pass = req.body.pass;
-
-            // *Setting the new credentials:
-            credentials.set(user, pass);
-
-            // *Sending a '201 CREATED' response, as the credentials have been successfully set:
-            res.status(201).end();
-         } catch(err){
-            // *If some error happens:
-            // *Resetting the credentials:
-            credentials.reset();
-
-            // *Checking if the error is a TypeError:
-            if(err instanceof TypeError)
-               // *If it is:
-               // *Sending a '400 BAD REQUEST' response, as the new credentials are not valid:
-               res.status(400).end();
-            else
-               // *If it's not:
-               // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
-               res.status(500).end();
-         }
+         // *Setting the credentials:
+         update(req, res, next);
       }
    }
 
@@ -87,40 +63,32 @@ module.exports = mongoose => {
     *  Does require admin authentication
     */
    function update(req, res, next){
-      // *Checking if the credentials have been set already:
-      if(credentials.isSet()){
-         // *If they have been:
-         // *Trying to update the credentials:
-         try{
-            // *Getting the credentials on the request body:
-            const user = req.body.user;
-            const pass = req.body.pass;
+      // *Trying to update the credentials:
+      try{
+         // *Getting the credentials on the request body:
+         const user = req.body.user;
+         const pass = req.body.pass;
 
+         // *Checking if the credentials are not being set:
+         if(user===undefined || user===null || pass===undefined || pass===null){
+            // *If they aren't:
+            // *Sending a '400 BAD REQUEST' response, as the credentials are not valid:
+            res.status(400).end();
+         } else{
+            // *If they are:
             // *Setting the new credentials:
             credentials.set(user, pass);
 
             // *Sending a '200 OK' response, as the credentials have been successfully updated:
             res.status(200).end();
-         } catch(err){
-            // *If some error happens:
-            // *Restoring the last value:
-            credentials.restore();
-
-            // *Checking if the error is a TypeError:
-            if(err instanceof TypeError)
-               // *If it is:
-               // *Sending a '400 BAD REQUEST' response, as the new credentials are not valid:
-               res.status(400).end();
-            else
-               // *If it's not:
-               // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
-               res.status(500).end();
          }
+      } catch(err){
+         // *If some error happens:
+         // *Restoring the last value:
+         credentials.restore();
 
-      } else{
-         // *If they haven't been:
-         // *Sending a '405 METHOD NOT ALLOWED' response, as the credentials have not been set yet:
-         res.status(405).end();
+         // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
+         res.status(500).end();
       }
    }
 
@@ -131,28 +99,19 @@ module.exports = mongoose => {
     *  Does require admin authentication
     */
    function erase(req, res, next){
-      // *Checking if the credentials have been set already:
-      if(credentials.isSet()){
-         // *If they have been:
-         // *Trying to erase the credentials:
-         try{
-            // *Erasing the credentials:
-            credentials.reset();
+      // *Trying to erase the credentials:
+      try{
+         // *Erasing the credentials:
+         credentials.reset();
 
-            // *Sending a '200 OK' response, as the credentials have been successfully erased:
-            res.status(200).end();
-         } catch(err){
-            // *If some error happens:
-            // *Restoring the last value:
-            credentials.restore();
-            // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
-            res.status(500).end();
-         }
-
-      } else{
-         // *If they haven't been:
-         // *Sending a '405 METHOD NOT ALLOWED' response, as the credentials have not been set yet:
-         res.status(405).end();
+         // *Sending a '200 OK' response, as the credentials have been successfully erased:
+         res.status(200).end();
+      } catch(err){
+         // *If some error happens:
+         // *Restoring the last value:
+         credentials.restore();
+         // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
+         res.status(500).end();
       }
    }
 

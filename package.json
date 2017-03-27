@@ -4,7 +4,8 @@
   "description": "A simple media service you can use within your ecosystem",
   "main": "main.js",
   "scripts": {
-    "standalone": "node standalone.js"
+    "start": "node standalone.js",
+    "test": "mocha ./tests/endpoints.js"
   },
   "author": "Guilherme Reginaldo Ruella <potentii@gmail.com>",
   "license": "MIT",
@@ -12,5 +13,11 @@
     "mongod": "2.0.0",
     "mongoose": "4.9.1",
     "w-srvr": "2.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.3"
   }
 }

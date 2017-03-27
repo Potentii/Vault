@@ -9,19 +9,14 @@ let last_credentials = undefined;
  * Sets the credentials
  * @param  {string} new_user The new username
  * @param  {string} new_pass The new password
- * @throws {TypeError}       If the credentials are not strings
  */
-function set(new_user, new_pass){
-   // *Throwing an error, if the credentials are not strings:
-   if(typeof new_user !== 'string' || typeof new_pass !== 'string')
-      throw new TypeError('The new credentials must be strings');
-
+function set(new_user = undefined, new_pass = undefined){
    // *Saving the last credentials:
    last_credentials = { user, pass };
 
    // *Setting the credentials:
-   pass = new_pass;
    user = new_user;
+   pass = new_pass;
 }
 
 
@@ -76,4 +71,4 @@ function testAgainst(test_user, test_pass){
 
 
 // *Exporting this module:
-module.exports = { set, reset, isSet, testAgainst };
+module.exports = { set, restore, reset, isSet, testAgainst };
