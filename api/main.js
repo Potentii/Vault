@@ -49,6 +49,7 @@ function start(){
                   .delete('/api/v1/media/:app/images/:file',   routes.images.removeFile)
 
 
+
                   // *Defining routes for remote service configuration:
                   // *Sets the credentials:
                   .post('/api/v1/credentials', routes.credentials.set)
@@ -66,13 +67,24 @@ function start(){
                   .delete('/api/v1/credentials', routes.credentials.erase)
 
 
+
                   // *Defining routes for remote user management:
-                  .post('/api/v1/apps',         routes.apps.addApp).advanced.parseJSON().done()
-                  .delete('/api/v1/apps/:app',  routes.apps.removeApp)
+                  // *Registers a new app:
+                  .post('/api/v1/apps', routes.credentials.check)
+                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
+                  .post('/api/v1/apps', routes.apps.add).advanced.parseJSON().done()
+
+                  // *Removes an existing app:
+                  .delete('/api/v1/apps/:app', routes.credentials.check)
+                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
+                  .delete('/api/v1/apps/:app', routes.apps.remove)
+
+                  .post('/api/v1/apps/:app/accesses',          routes.accesses.add)
+                  .delete('/api/v1/apps/:app/accesses/:key',   routes.accesses.remove)
 
 
-                  // *Sending a '404 NOT FOUND' response, as none of the routes matched the request:
-                  .most('/api/v1/*', (req, res, next) => res.status(404).end())
+
+                  .delete('/api/v1', routes.api.reset)
 
                   .done()
 

@@ -13,11 +13,11 @@ module.exports = mongoose => {
       if(credentials.isSet()){
          // *If they have been:
          // *Getting the credentials from headers:
-         const user = req.headers['Auth-User'];
-         const pass = req.headers['Auth-Pass'];
+         const user = req.get('Auth-User');
+         const pass = req.get('Auth-Pass');
 
          // *Checking if the given credentials matches:
-         if(credentials.match(user, pass)){
+         if(credentials.testAgainst(user, pass)){
             // *If they do:
             // *Sending a '200 OK' response, as the given credentials matches:
             res.status(200);
