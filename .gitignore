@@ -1,5 +1,4 @@
 *.cmd
-/tests
 /docs
 
 # Logs
