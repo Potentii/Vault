@@ -22,7 +22,7 @@ module.exports = mongoose => {
       _app: {
          type: Schema.Types.ObjectId,
          ref: 'App',
-         required: false
+         required: true
       }
    });
 

@@ -68,19 +68,33 @@ function start(){
 
 
 
+                  // *Prepending the admin auth middleware before the /apps routes:
+                  .most(['/api/v1/apps', '/api/v1/apps/*'], routes.credentials.check)
+                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
+
+
+
                   // *Defining routes for remote user management:
                   // *Registers a new app:
-                  .post('/api/v1/apps', routes.credentials.check)
-                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
                   .post('/api/v1/apps', routes.apps.add).advanced.parseJSON().done()
 
                   // *Removes an existing app:
-                  .delete('/api/v1/apps/:app', routes.credentials.check)
-                     .advanced.allowedHeaders('Auth-User', 'Auth-Pass').done()
                   .delete('/api/v1/apps/:app', routes.apps.remove)
 
-                  .post('/api/v1/apps/:app/accesses',          routes.accesses.add)
-                  .delete('/api/v1/apps/:app/accesses/:key',   routes.accesses.remove)
+
+
+                  // *Defining routes for remote access management:
+                  // *Retrieves all accesses of an app:
+                  .get('/api/v1/apps/:app/accesses', routes.accesses.getAllFromApp)
+
+                  // *Adds a new access for an app:
+                  .post('/api/v1/apps/:app/accesses', routes.accesses.addOnApp)
+
+                  // *Removes an access from an app:
+                  .delete('/api/v1/apps/:app/accesses/:key', routes.accesses.removeFromApp)
+
+                  // *Removes all the accesses of an app:
+                  .delete('/api/v1/apps/:app/accesses', routes.accesses.removeAllFromApp)
 
 
 

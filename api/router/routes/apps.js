@@ -18,7 +18,7 @@ module.exports = mongoose => {
          // *Saving it in the database:
          .save()
          .then(item => {
-            // *Sending a '201 CREATED' response, as the app have been successfully added:
+            // *Sending a '201 CREATED' response, as the app has been successfully added:
             res.status(201).end();
          })
          .catch(err => {
@@ -61,7 +61,7 @@ module.exports = mongoose => {
             // *Checking if the query has removed any document:
             if(info.result.n)
                // *If it has:
-               // *Sending a '200 OK' response, as the app have been successfully removed:
+               // *Sending a '200 OK' response, as the app has been successfully removed:
                res.status(200).end();
             else
                // *If it hasn't:
