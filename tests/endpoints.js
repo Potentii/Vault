@@ -13,7 +13,7 @@ describe('Endpoints', function(){
       this.timeout(10000);
 
       // *Setting the test environment file:
-      process.env.CONFIGS = './tests/.env.test';
+      process.env.CONFIGS = process.env.CONFIGS ? process.env.CONFIGS : './tests/.env.test';
 
       // *Starting the services:
       return service.start()
