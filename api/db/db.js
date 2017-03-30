@@ -1,6 +1,7 @@
 // *Requiring the needed modules:
 const mongoose = require('mongoose');
 const Mongod = require('mongod');
+const ps = require('ps-node');
 
 /**
  * The mongo database controller instance
@@ -10,6 +11,26 @@ let mongo_database = null;
 
 // *Setting up the internal mongoose promise engine:
 mongoose.Promise = Promise;
+
+
+
+/**
+ * Checks whether the 'mongod' process is currently running
+ * @return {Promise<boolean>} Whether mongod is running or not
+ */
+function isMongodRunning(){
+   // *Returning a boolean promise:
+   return new Promise((resolve, reject) => {
+      // *Checking the 'mongod' process:
+      ps.lookup({command: 'mongod'}, (err, processes) => {
+         // *Rejecting if some error has happened:
+         if(err) return reject(err);
+
+         // *Resolving with true if mongod is running, false otherwise:
+         resolve(processes.some(p => !!p));
+      });
+   });
+}
 
 
 
@@ -29,10 +50,12 @@ function start(settings){
    // *Checking if it is necessary to spawn the database process:
    if(!mongo_database && (settings.host==='127.0.0.1' || settings.host==='localhost')){
       // *If it is:
-      // *Spawning the process:
-      return spawnDatabase(settings)
+      // *Checking if the database is already running:
+      return isMongodRunning()
+         // *Spawning the database, if it's not already running:
+         .then(running => !running && spawnDatabase(settings))
          // *Trying to connect and sync the model:
-         .then(() => connectAndSync(settings))
+         .then(() => connectAndSync(settings));
    } else{
       // *If it's not:
       // *Trying to connect and sync the model:
