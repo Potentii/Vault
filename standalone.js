@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Standalone initialization application
+ * Standalone initialization script
  */
 
 // *Requiring the service module:

@@ -1,5 +1,6 @@
 // *Requiring the needed modules:
 const Configurator = require('w-srvr');
+const env = require('./env.js');
 const db = require('./db/db.js');
 
 // *Creating a new server configurator:
@@ -15,18 +16,24 @@ let finish_signaled = false;
  * @return {Promise} A promise that resolves into a { server, address } object, or rejects if something went wrong
  */
 function start(){
+   // *Trying to start the server:
    try{
+      // *Getting the api router:
       const router = require('./router/router.js');
 
-      // *Starting the database:
-      return db.start({
+
+
+      // *Preparing the environment variables:
+      return env.load()
+         // *Starting the database:
+         .then(() => db.start({
             host: process.env.DB_HOST || '127.0.0.1',
             port: process.env.DB_PORT || '27017',
             user: process.env.DB_USER,
             pass: process.env.DB_PASS,
-            database: process.env.DB_SCHEMA,
+            database: process.env.DB_SCHEMA || 'vault',
             db_path: process.env.DB_PATH
-         })
+         }))
          // TODO setup the disk folders
          // *Setting up the routes:
          .then(mongoose => router(mongoose))
@@ -74,7 +81,7 @@ function start(){
 
 
 
-                  // *Defining routes for remote user management:
+                  // *Defining routes for user management:
                   // *Registers a new app:
                   .post('/api/v1/apps', routes.apps.add).advanced.parseJSON().done()
 
@@ -83,7 +90,7 @@ function start(){
 
 
 
-                  // *Defining routes for remote access management:
+                  // *Defining routes for access management:
                   // *Retrieves all accesses of an app:
                   .get('/api/v1/apps/:app/accesses', routes.accesses.getAllFromApp)
 
@@ -98,7 +105,12 @@ function start(){
 
 
 
-                  .delete('/api/v1', routes.api.reset)
+                  // *Defining development routes:
+                  // *Resets all the database and credentials info (not available in production):
+                  .delete('/api/v1', routes.dev.check)
+                  .delete('/api/v1', routes.dev.reset)
+
+
 
                   .done()
 

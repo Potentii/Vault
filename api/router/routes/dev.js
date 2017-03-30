@@ -5,12 +5,29 @@ module.exports = mongoose => {
 
 
    /**
+    * Checks if the environment is not production
+    */
+   function check(req, res, next){
+      // *Checking if the environment is set to production:
+      if(process.env.NODE_ENV === 'production'){
+         // *If it is:
+         // *Blocking this route:
+         res.status(404).end();
+      } else{
+         // *If it's not:
+         // *Allowing this route:
+         next();
+      }
+   }
+
+
+
+   /**
     * Cleans all the api information
+    *  Does require environment check (not available in production)
     *  Does not require admin authentication
     */
    function reset(req, res, next){
-      // TODO check if it is in a test/development environment
-
       // *Starting a new promise chain:
       new Promise((resolve, reject) => {
          // *Getting all the collections from the database:
