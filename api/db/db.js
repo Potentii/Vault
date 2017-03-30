@@ -92,7 +92,8 @@ function spawnDatabase({ port, db_path }){
  * @return {Promise} Resolves if it goes ok, or rejects if an error has happened
  */
 function killDatabase(){
-   return mongo_database.close();
+   return mongo_database.close()
+      .then(() => mongo_database = undefined);
 }
 
 
@@ -148,35 +149,12 @@ function sync(){
    return new Promise((resolve, reject) => {
       // *Trying to setup the model:
       try{
-         // *Getting the Schema class:
-         const Schema = mongoose.Schema;
+         // *Getting the schemas:
+         const schemas = require('./model.js')(mongoose);
 
-         // *Defining the App schema:
-         const Apps = new Schema({
-            name: {
-               type: String,
-               required: true,
-               unique: true,
-               match: [/^[a-z0-9\_\-]+$/, 'Invalid app name']
-            }
-         });
-
-         // *Defining the Access schema:
-         const Accesses = new Schema({
-            key: {
-               type: String,
-               required: true,
-            },
-            _app: {
-               type: Schema.Types.ObjectId,
-               ref: 'App',
-               required: false
-            }
-         });
-
-         // *Applying the model:
-         mongoose.model('App', Apps);
-         mongoose.model('Access', Accesses);
+         // *Applying the schemas:
+         mongoose.model('App', schemas.Apps);
+         mongoose.model('Access', schemas.Accesses);
 
          // Resolving the promise with mongoose:
          resolve(mongoose);

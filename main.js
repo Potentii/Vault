@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 'use strict';
 
-require('./api/main.js');
+module.exports = require('./api/main.js');
