@@ -1,123 +1,8 @@
 // *Requiring the needed modules:
 const mongoose = require('mongoose');
-const Mongod = require('mongod');
-const ps = require('ps-node');
-
-/**
- * The mongo database controller instance
- * @type {Mongod}
- */
-let mongo_database = null;
 
 // *Setting up the internal mongoose promise engine:
 mongoose.Promise = Promise;
-
-
-
-/**
- * Checks whether the 'mongod' process is currently running
- * @return {Promise<boolean>} Whether mongod is running or not
- */
-function isMongodRunning(){
-   // *Returning a boolean promise:
-   return new Promise((resolve, reject) => {
-      // *Checking the 'mongod' process:
-      ps.lookup({command: 'mongod'}, (err, processes) => {
-         // *Rejecting if some error has happened:
-         if(err) return reject(err);
-
-         // *Resolving with true if mongod is running, false otherwise:
-         resolve(processes.some(p => !!p));
-      });
-   });
-}
-
-
-
-/**
- * Starts the database
- *  i.e. spawns mongod if it's necessary, and connects
- * @param  {object} settings             The settings to configure the database
- * @param  {string} settings.host        The database hostname
- * @param  {string} settings.database    The database schema
- * @param  {string|number} settings.port The database port (The mongodb default is 27017)
- * @param  {string} settings.user        The database username
- * @param  {string} settings.pass        The database password
- * @param  {string} settings.db_path     The mongodb directory (will set the '--dbpath' flag of 'mongod') (not needed if the database is remote)
- * @return {Promise}                     It resolves into the mongoose instance, or it rejects if some error happens
- */
-function start(settings){
-   // *Checking if it is necessary to spawn the database process:
-   if(!mongo_database && (settings.host==='127.0.0.1' || settings.host==='localhost')){
-      // *If it is:
-      // *Checking if the database is already running:
-      return isMongodRunning()
-         // *Spawning the database, if it's not already running:
-         .then(running => !running && spawnDatabase(settings))
-         // *Trying to connect and sync the model:
-         .then(() => connectAndSync(settings));
-   } else{
-      // *If it's not:
-      // *Trying to connect and sync the model:
-      return connectAndSync(settings);
-   }
-}
-
-
-
-/**
- * Stops the database
- *  i.e. disconnects and kills the database server process
- * @return {Promise} Resolves if it goes ok, or rejects if an error has happened
- */
-function stop(){
-   // *Checking if the database controller is set:
-   if(!mongo_database){
-      // *If it's not:
-      // *Disconnecting from the database:
-      return disconnect();
-   } else{
-      // *If it is:
-      // *Disconnecting from the database:
-      return disconnect()
-         // *Killing the database server process, even if some error has occured while disconnecting:
-         .then(() => killDatabase(), err => {
-            return killDatabase()
-               .then(() => Promise.reject(err));
-         })
-   }
-}
-
-
-
-/**
- * Spawns a new MongoDB server process
- * @param  {object} settings             The settings to configure the database
- * @param  {string|number} settings.port The database port (The mongodb default is 27017)
- * @param  {string} settings.db_path     The mongodb directory (will set the '--dbpath' flag of 'mongod') (not needed if the database is remote)
- * @return {Promise}                     Resolves if it goes ok, or rejects if an error has happened
- */
-function spawnDatabase({ port, db_path }){
-   // *Setting the database server controller:
-   mongo_database = new Mongod({
-      port,
-      dbpath: db_path
-   });
-
-   // *Spawning the database process:
-   return mongo_database.open();
-}
-
-
-
-/**
- * Kills the MongoDB server process
- * @return {Promise} Resolves if it goes ok, or rejects if an error has happened
- */
-function killDatabase(){
-   return mongo_database.close()
-      .then(() => mongo_database = undefined);
-}
 
 
 
@@ -203,8 +88,6 @@ function disconnect(){
 
 // *Exporting this module:
 module.exports = {
-   start,
-   stop,
    connectAndSync,
    connect,
    sync,

@@ -20,14 +20,13 @@ function start(){
 
       // *Preparing the environment variables:
       return env.load()
-         // *Starting the database:
-         .then(() => db.start({
+         // *Connecting to the database:
+         .then(() => db.connectAndSync({
             host: process.env.DB_HOST || '127.0.0.1',
             port: process.env.DB_PORT || '27017',
             user: process.env.DB_USER,
             pass: process.env.DB_PASS,
-            database: process.env.DB_SCHEMA || 'vault',
-            db_path: process.env.DB_PATH
+            database: process.env.DB_SCHEMA || 'vault'
          }))
          // TODO setup the disk folders
          // *Setting up the routes:
@@ -56,8 +55,8 @@ function finish(){
    // *Setting the finish signal:
    finish_signaled = true;
 
-   // *Stopping the database:
-   return db.stop()
+   // *Disconnecting from the database:
+   return db.disconnect()
       // *Stopping the server:
       .then(() => server.stop());
 }

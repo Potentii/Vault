@@ -5,7 +5,7 @@
  */
 
 // *Requiring the service module:
-const service = require('./api/main.js');
+const service = require('.');
 
 
 

@@ -11,9 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^4.0.0",
-    "mongod": "2.0.0",
     "mongoose": "4.9.1",
-    "ps-node": "0.1.5",
     "uuid": "3.0.1",
     "w-srvr": "2.1.0"
   },
