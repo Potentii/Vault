@@ -36,10 +36,15 @@ module.exports = mongoose => {
             if(err) return reject(err);
             // *Initializing the 'remove tasks' array:
             const tasks = [];
+            // *Defining the system namespace regex:
+            const sys_namespace_regex = /\.*?system\./i;
             // *Getting each collection:
             for(let collection of collections){
-               // *Adding the remove promise into the tasks array:
-               tasks.push(collection.deleteMany({}));
+               // *Checking if the collection belongs to the system's namespace:
+               if(!sys_namespace_regex.test(collection.namespace))
+                  // *If it does not:
+                  // *Adding the remove promise into the tasks array:
+                  tasks.push(collection.deleteMany({}));
             }
             // *Resolving with all the tasks to be done:
             resolve(tasks);
@@ -53,6 +58,7 @@ module.exports = mongoose => {
             res.status(200).end();
          })
          .catch(err => {
+            //console.log(err);
             // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
             res.status(500).end();
          });
