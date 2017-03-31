@@ -46,7 +46,7 @@ describe('Apps', function(){
 
       it('400s if attemps to register an app without name', function(){
          // *Trying to register an app without name:
-         return req('POST', 'http://localhost/api/v1/apps', undefined, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', undefined, credentials_header)
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(400));
       });
@@ -57,7 +57,7 @@ describe('Apps', function(){
          const name = 'apps-aa/aa';
 
          // *Trying to register an app with an invalid name:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(400));
       });
@@ -68,7 +68,7 @@ describe('Apps', function(){
          const name = 'apps-my-valid_app4name1';
 
          // *Trying to register an app with a valid name:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Expecting that the app could be added:
             .then(res => expect(res.statusCode).to.equal(201));
       });
@@ -79,11 +79,11 @@ describe('Apps', function(){
          const name = 'apps-repeated-app-name';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
             // *Trying to register the same app name again:
-            .then(() => req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(409));
       });
@@ -91,7 +91,7 @@ describe('Apps', function(){
 
       it('401s if attemps to register an app with invalid credentials', function(){
          // *Trying to register an app with invalid credentials:
-         return req('POST', 'http://localhost/api/v1/apps')
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps')
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -106,7 +106,7 @@ describe('Apps', function(){
          const name = 'apps-app-name-that-does-not-exists-1';
 
          // *Trying to remove an app that does not exist:
-         return req('DELETE', 'http://localhost/api/v1/apps/' + name, undefined, credentials_header)
+         return req('DELETE', process.env.TEST_HOST + 'api/v1/apps/' + name, undefined, credentials_header)
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(404));
       });
@@ -117,11 +117,11 @@ describe('Apps', function(){
          const name = 'apps-delete-app-name-1';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
             // *Trying to remove it:
-            .then(() => req('DELETE', 'http://localhost/api/v1/apps/' + name, undefined, credentials_header))
+            .then(() => req('DELETE', process.env.TEST_HOST + 'api/v1/apps/' + name, undefined, credentials_header))
             // *Testing if the app could be removed:
             .then(res => expect(res.statusCode).to.equal(200));
       });
@@ -132,11 +132,11 @@ describe('Apps', function(){
          const name = 'apps-delete-app-name-2';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
             // *Trying to remove it with invalid credentials:
-            .then(() => req('DELETE', 'http://localhost/api/v1/apps/' + name))
+            .then(() => req('DELETE', process.env.TEST_HOST + 'api/v1/apps/' + name))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });

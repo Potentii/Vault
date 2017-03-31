@@ -49,7 +49,7 @@ describe('Accesses', function(){
          const name = 'access-app-name-that-does-not-exists';
 
          // *Trying to create an access for an app that doesn't exist:
-         return req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header)
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(404));
       });
@@ -60,11 +60,11 @@ describe('Accesses', function(){
          const name = 'access-app-name-1';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Testing if the access could be created:
             .then(res => {
                // *Expecting that the access could be created successfully:
@@ -84,11 +84,11 @@ describe('Accesses', function(){
          const name = 'access-app-name-2';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
             // *Trying to create a new access for it with invalid credentials:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses'))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses'))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -103,7 +103,7 @@ describe('Accesses', function(){
          const name = 'access-app-name-that-does-not-exists';
 
          // *Trying to retrieve the accesses of an app that doesn't exist:
-         return req('GET', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header)
+         return req('GET', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header)
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(404));
       });
@@ -114,22 +114,22 @@ describe('Accesses', function(){
          const name = 'access-app-name-3';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the access could be created successfully:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the access could be created successfully:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to retrieve the app's accesses:
-            .then(() => req('GET', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('GET', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Testing if the accesses could be retrieved:
             .then(res => {
                // *Expecting that the accesses could be retrieved successfully:
@@ -149,17 +149,17 @@ describe('Accesses', function(){
          const name = 'access-app-name-4';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the access could be created successfully:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to retrieve the app's accesses with invalid credentials:
-            .then(() => req('GET', 'http://localhost/api/v1/apps/' + name + '/accesses'))
+            .then(() => req('GET', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses'))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -174,22 +174,22 @@ describe('Accesses', function(){
          const name = 'access-remove-app-name-1';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the access could be created successfully:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the access could be created successfully:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to remove all the accesses of this app:
-            .then(() => req('DELETE', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('DELETE', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the accesses could be removed successfully:
             .then(res => expect(res.statusCode).to.equal(200));
       });
@@ -200,17 +200,17 @@ describe('Accesses', function(){
          const name = 'access-remove-app-name-2';
 
          // *Registering an app:
-         return req('POST', 'http://localhost/api/v1/apps', { name }, credentials_header)
+         return req('POST', process.env.TEST_HOST + 'api/v1/apps', { name }, credentials_header)
             // *Testing if the app could be added:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to create a new access for it:
-            .then(() => req('POST', 'http://localhost/api/v1/apps/' + name + '/accesses', undefined, credentials_header))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses', undefined, credentials_header))
             // *Expecting that the access could be created successfully:
             .then(res => expect(res.statusCode).to.equal(201))
 
             // *Trying to remove all the accesses of this app with invalid credentials:
-            .then(() => req('DELETE', 'http://localhost/api/v1/apps/' + name + '/accesses'))
+            .then(() => req('DELETE', process.env.TEST_HOST + 'api/v1/apps/' + name + '/accesses'))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });

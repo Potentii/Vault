@@ -32,7 +32,7 @@ function req(method, uri, body, headers){
  */
 function resetAPI(){
    // *Issuing the request:
-   return req('DELETE', 'http://localhost/api/v1')
+   return req('DELETE', process.env.TEST_HOST + 'api/v1')
       .then(res => {
          // *Checking if the API could be erased:
          if(res.statusCode != 200)
@@ -52,7 +52,7 @@ function resetAPI(){
  */
 function setCredentials(user, pass){
    // *Issuing the request:
-   return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+   return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
       .then(res => {
          // *Checking if the credentials could be set:
          if(res.statusCode != 200)
@@ -71,7 +71,7 @@ function setCredentials(user, pass){
  * @return {Promise}     A promise that resolves if everything went fine, or rejects if some error happens
  */
 function resetCredentials(user, pass){
-   return req('DELETE', 'http://localhost/api/v1/credentials', undefined, credentialsHeaders(user, pass))
+   return req('DELETE', process.env.TEST_HOST + 'api/v1/credentials', undefined, credentialsHeaders(user, pass))
       .then(res => {
          // *Checking if the credentials could be erased:
          if(res.statusCode != 200)

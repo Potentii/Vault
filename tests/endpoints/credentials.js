@@ -31,7 +31,7 @@ describe('Credentials', function(){
 
       it('401s if it attempts to update the credentials before they get set', function(){
          // *Trying to update the credentials before setting them:
-         return req('PUT', 'http://localhost/api/v1/credentials')
+         return req('PUT', process.env.TEST_HOST + 'api/v1/credentials')
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -43,11 +43,11 @@ describe('Credentials', function(){
          const pass = 'bbb';
 
          // *Trying to set the credentials:
-         return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
             // *Expecting that the credentials could be set:
             .then(res => expect(res.statusCode).to.equal(200))
             // *Trying to update the credentials:
-            .then(() => req('PUT', 'http://localhost/api/v1/credentials'))
+            .then(() => req('PUT', process.env.TEST_HOST + 'api/v1/credentials'))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -63,11 +63,11 @@ describe('Credentials', function(){
          const new_pass = 'ddd';
 
          // *Trying to set the credentials:
-         return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
             // *Expecting that the credentials could be set:
             .then(res => expect(res.statusCode).to.equal(200))
             // *Trying to update the credentials:
-            .then(() => req('PUT', 'http://localhost/api/v1/credentials', { user: new_user, pass: new_pass }, credentialsHeaders(user, pass)))
+            .then(() => req('PUT', process.env.TEST_HOST + 'api/v1/credentials', { user: new_user, pass: new_pass }, credentialsHeaders(user, pass)))
             // *Expecting that the credentials could be updated:
             .then(res => expect(res.statusCode).to.equal(200))
       });
@@ -79,7 +79,7 @@ describe('Credentials', function(){
 
       it('401s if it attempts to erase the credentials before they get set', function(){
          // *Trying to erase the credentials before setting them:
-         return req('DELETE', 'http://localhost/api/v1/credentials')
+         return req('DELETE', process.env.TEST_HOST + 'api/v1/credentials')
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -91,11 +91,11 @@ describe('Credentials', function(){
          const pass = 'bbb';
 
          // *Trying to set the credentials:
-         return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
             // *Expecting that the credentials could be set:
             .then(res => expect(res.statusCode).to.equal(200))
             // *Trying to erase the credentials:
-            .then(() => req('DELETE', 'http://localhost/api/v1/credentials'))
+            .then(() => req('DELETE', process.env.TEST_HOST + 'api/v1/credentials'))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(401));
       });
@@ -107,11 +107,11 @@ describe('Credentials', function(){
          const pass = 'bbb';
 
          // *Trying to set the credentials:
-         return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
             // *Expecting that the credentials could be set:
             .then(res => expect(res.statusCode).to.equal(200))
             // *Trying to erase the credentials:
-            .then(() => req('DELETE', 'http://localhost/api/v1/credentials', undefined, credentialsHeaders(user, pass)))
+            .then(() => req('DELETE', process.env.TEST_HOST + 'api/v1/credentials', undefined, credentialsHeaders(user, pass)))
             // *Expecting that the credentials could be erased:
             .then(res => expect(res.statusCode).to.equal(200));
       });
@@ -123,7 +123,7 @@ describe('Credentials', function(){
 
       it('400s if it attempts to set the credentials without user or pass', function(){
          // *Trying to set the credentials without the user/pass:
-         return req('POST', 'http://localhost/api/v1/credentials', {user: null, pass: null})
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', {user: null, pass: null})
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(400));
       });
@@ -135,7 +135,7 @@ describe('Credentials', function(){
          const pass = 'bbb';
 
          // *Trying to set the credentials:
-         return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
             // *Expecting that the credentials could be set:
             .then(res => expect(res.statusCode).to.equal(200));
       });
@@ -147,11 +147,11 @@ describe('Credentials', function(){
          const pass = 'bbb';
 
          // *Trying to set the credentials:
-         return req('POST', 'http://localhost/api/v1/credentials', { user, pass })
+         return req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass })
             // *Expecting that the credentials could be set:
             .then(res => expect(res.statusCode).to.equal(200))
             // *Trying to set the credentials again:
-            .then(() => req('POST', 'http://localhost/api/v1/credentials', { user, pass }))
+            .then(() => req('POST', process.env.TEST_HOST + 'api/v1/credentials', { user, pass }))
             // *Expecting that the server responds with an error:
             .then(res => expect(res.statusCode).to.equal(405));
       });

@@ -17,6 +17,7 @@ describe('Endpoints', function(){
 
       // *Starting the services:
       return service.start()
+         .then(info => process.env.TEST_HOST = info.address.href)
          .catch(err => {
             // *If something went wrong:
             // *Finishing the services:
