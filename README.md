@@ -1,5 +1,7 @@
 # Vault
 
+[![Build Status](https://travis-ci.org/Potentii/Vault.svg?branch=master)](https://travis-ci.org/Potentii/Vault)
+
 <br><br>
 
 ## Table of contents

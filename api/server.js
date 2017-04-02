@@ -24,10 +24,10 @@ function start({ routes, port }){
 
          // *Defining routes for media resources:
          // *TODO implement the Apps auth
-         .most('/api/v1/media/*',                     (req, res, next) => next())
-         .get('/api/v1/media/:app/images/:file',      routes.images.getFile)
-         .post('/api/v1/media/:app/images',           routes.images.saveFile).advanced.parseJSON({limit: '1mb'}).done()
-         .delete('/api/v1/media/:app/images/:file',   routes.images.removeFile)
+         .most('/api/v1/media/*',             (req, res, next) => next())
+         .get('/api/v1/media/:app/:media',    routes.media.get)
+         .post('/api/v1/media/:app',          routes.media.save).advanced.parseJSON({limit: '5mb'}).done()
+         .delete('/api/v1/media/:app/:media', routes.media.remove)
 
 
 

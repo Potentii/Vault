@@ -1,9 +1,9 @@
 
 // *Exporting this module:
-module.exports = mongoose => {
+module.exports = (mongoose, worker) => {
    // *Building and returning the routes:
    return {
-      images: {},
+      media: require('./routes/media.js')(mongoose, worker),
       apps: require('./routes/apps.js')(mongoose),
       credentials: require('./routes/credentials.js')(mongoose),
       dev: require('./routes/dev.js')(mongoose),
