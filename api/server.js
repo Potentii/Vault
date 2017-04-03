@@ -23,11 +23,24 @@ function start({ routes, port }){
       .api
 
          // *Defining routes for media resources:
-         // *TODO implement the Apps auth
-         .most('/api/v1/media/*',             (req, res, next) => next())
-         .get('/api/v1/media/:app/:media',    routes.media.get)
-         .post('/api/v1/media/:app',          routes.media.save).advanced.parseJSON({limit: '5mb'}).done()
-         .delete('/api/v1/media/:app/:media', routes.media.remove)
+         // *Checks the access:
+         .most(['/api/v1/apps/:app/media', '/api/v1/apps/:app/media/*'], routes.accesses.check)
+
+         // *Downloads the given media file:
+         .get('/api/v1/apps/:app/media/:media', routes.media.download)
+
+         // *Retrieves all the media names of the given app:
+         .get('/api/v1/apps/:app/media', routes.media.getAllFromApp)
+
+         // *Uploads a file:
+         .post('/api/v1/apps/:app/media', routes.media.upload)
+            .advanced.parseJSON({limit: '5mb'}).done()
+
+         // *Removes the given media:
+         .delete('/api/v1/apps/:app/media/:media', routes.media.removeFromApp)
+
+         // *Removes all the media files of the given app:
+         .delete('/api/v1/apps/:app/media', routes.media.removeAllFromApp)
 
 
 

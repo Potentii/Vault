@@ -5,6 +5,54 @@ module.exports = mongoose => {
 
 
    /**
+    * Checks if the access is valid
+    */
+   function check(req, res, next){
+      // *Getting the key header:
+      const key = req.get('Access-Key');
+      // *Getting the app name from the request url:
+      const name = req.params.app;
+
+      // *Getting the models:
+      const App = mongoose.model('App');
+      const Access = mongoose.model('Access');
+
+      // *Finding the app with the given name:
+      App.findOne({ name })
+         .select('_id')
+         .exec()
+         .then(item => {
+            // *Checking if the app exists:
+            if(item){
+               // *If it does:
+               // *Finding this app's access that has the given key:
+               return Access.findOne({ _app: item._id, key })
+                  .then(item => {
+                     // *Checking if the access has been found:
+                     if(item)
+                        // *If it has:
+                        // *Sending to the next middleware, as the access is valid:
+                        next();
+                     else
+                        // *If it hasn't:
+                        // *Sending a '401 UNAUTHORIZED' response, as the given access is not valid:
+                        res.status(401).end();
+                  });
+            } else{
+               // *If it doesn't:
+               // *Sending a '404 NOT FOUND' response, as the given app does not exists:
+               res.status(404).end();
+            }
+         })
+         .catch(err => {
+            // *Sending a '500 INTERNAL SERVER ERROR' response, as the cause of the error is unknown:
+            res.status(500).end();
+         });
+   }
+
+
+
+   /**
     * Retrieves all the app's accesses
     *  Does require admin authentication
     */
@@ -180,5 +228,5 @@ module.exports = mongoose => {
 
 
    // *Returning the middlewares:
-   return { getAllFromApp, addOnApp, removeFromApp, removeAllFromApp };
+   return { check, getAllFromApp, addOnApp, removeFromApp, removeAllFromApp };
 };

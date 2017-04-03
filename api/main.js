@@ -22,20 +22,20 @@ function start(){
       // *Preparing the environment variables:
       return env.load()
          // *Connecting to the persistence layers:
-         .then(() => Promise.all(
+         .then(() => Promise.all([
             // *Connecting to the database:
-            [db.connectAndSync({
+            db.connectAndSync({
                host: process.env.DB_HOST || '127.0.0.1',
                port: process.env.DB_PORT || '27017',
                user: process.env.DB_USER,
                pass: process.env.DB_PASS,
                database: process.env.DB_SCHEMA || 'vault'
-            })],
+            }),
             // *Connecting to the disk worker:
-            [disk.generate({
+            disk.generate({
                content_dir: process.env.CONTENT_DIR || '/data/media/'
-            })]
-         ))
+            })
+         ]))
          // *Setting up the routes:
          .then(([ mongoose, worker ]) => router(mongoose, worker))
          // *Setting up the server:
@@ -43,6 +43,7 @@ function start(){
             routes,
             port: process.env.PORT || 80
          }));
+
    } catch(err){
       // *Rejecting the promise if something went wrong:
       return Promise.reject(err);
